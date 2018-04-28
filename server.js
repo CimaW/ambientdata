@@ -1,6 +1,14 @@
 var express = require('express'),
-  app = express(),
-  port = process.env.PORT || 8080;
+var ambientController = require('../controllers/AmbientController');
+
+app = express(),
+port = process.env.PORT || 8080;
+
+app.route('/insert')
+    .get(ambientController.insert)
+    .post(ambientController.insert);
+
+
 
 app.listen(port);
 
