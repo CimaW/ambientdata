@@ -1,4 +1,3 @@
-var dao  = require('../dao/models');
 var express = require('express');
 var router = express.Router();
 var dateFormat = require('dateformat');
@@ -10,3 +9,5 @@ router.get("/insert", (req, response) => {
     response.status( 200 ).json(resp);
 
 });
+
+module.exports = router;
