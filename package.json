@@ -20,7 +20,8 @@
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
     "dateformat": "^3.0.3",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "influx": "^5.0.7"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"
