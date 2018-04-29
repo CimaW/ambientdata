@@ -41,7 +41,7 @@ const influx = new Influx.InfluxDB({
     });
 
 
-    router.post("/select", (req, response) => {
+    router.get("/select", (req, response) => {
         let str="SELECT MEAN(temp) as temperature,MEAN(hum) as humidity " +
                             "FROM ambient " +
                             //"WHERE time > "+from+" and time <= "+ to + " "+
