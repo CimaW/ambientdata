@@ -41,10 +41,12 @@ const influx = new Influx.InfluxDB({
     });
 
 
-    router.get("/select", (req, response) => {
+    router.get("/select/:from/:to", (req, response) => {
+        let from=request.params.from;
+        let to=request.params.to;
         let str="SELECT MEAN(temp) as temperature,MEAN(hum) as humidity " +
                             "FROM ambient " +
-                            //"WHERE time > "+from+" and time <= "+ to + " "+
+                            "WHERE time > "+from+" and time <= "+ to + " "+
                             "GROUP BY time(60m)";
 
     influx.query(str).then(result => {
