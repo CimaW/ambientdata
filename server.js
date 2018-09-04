@@ -10,6 +10,7 @@ express()
     .use(require('body-parser').urlencoded({ extended: true }))
     .use(require('body-parser').json())
     .use("/",ambientRoutes)
+    .use('/cam42', express.static(__dirname + '/cam42'))
     .get('*', (req, res) => res.redirect('/404.html'))
     .listen(port, () => console.log(`Listening on ${ port }`))
 
