@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Cam42 Dashboard</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://elcimax.000webhostapp.com/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link href="https://elcimax.000webhostapp.com/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+
+    <link  href="https://elcimax.000webhostapp.com/vendor/datepicker/css/daterangepicker.css" rel="stylesheet" type="text/css" />
+
+      <!-- Custom styles for this template -->
+        <link href="css/sb-admin.css" rel="stylesheet">
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="https://elcimax.000webhostapp.com/vendor/jquery/jquery.min.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/popper/popper.min.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+      <!-- Plugin JavaScript -->
+      <script src="https://elcimax.000webhostapp.com/vendor/jquery-easing/jquery.easing.min.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/chart.js/Chart.min.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/datatables/jquery.dataTables.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/datatables/dataTables.bootstrap4.js"></script>
+
+      <script src="https://elcimax.000webhostapp.com/vendor/datepicker/js/moment.min.js"></script>
+      <script src="https://elcimax.000webhostapp.com/vendor/datepicker/js/moment-timezone.min.js"></script>
+
+      <script src="https://elcimax.000webhostapp.com/vendor/datepicker/js/daterangepicker.js"></script>
+
+      <script src="js/sb-admin.js"></script>
+
+      <script inline="javascript">
+          var cam42=new Cam42();
+          $( document ).ready(function() {
+                cam42.init();
+                   cam42.findAmbientData();
+           });
+      </script>
+
+  </head>
+
+  <body class="fixed-nav sidenav-toggled" id="page-top">
+
+    <div class="content-wrapper py-3">
+
+      <div id="maincontent" class="container-fluid">
+        <div class="card mb-3">
+            <div class="card-header" style="padding-top: 6px;padding-bottom: 6px;">
+                 <div style="float: right;">
+                     <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; wid 100%">
+                         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;<span></span> <b class="caret"></b>
+                     </div>
+                 </div>
+                 <div style="float: left;padding-top: 6px;">
+                    <i class="fa fa-area-chart"></i> 24h Chart
+                 </div>
+            </div>
+          <div class="card-body">
+            <canvas id="myAreaChart" width="100%" height="30"></canvas>
+          </div>
+          <div class="card-footer small text-muted">
+            Updated <span text="${#dates.format(currentDate, 'dd-MM-yyyy HH:mm')}"></span>
+          </div>
+        </div>
+
+        <!--<div class="row">
+          <div class="col-lg-6">
+            <div id="areachartcont"  class="card mb-3">
+              <div class="card-header">
+                <i class="fa fa-bar-chart"></i>
+                  Realtine Chart
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12 my-auto">
+                      <div class="row">
+                          <div class="col-sm-6 my-auto">
+                            <canvas id="temperatureChart" width="100" height="50"></canvas>
+                              <div style="text-align: center;">
+                                  <div class="h4 mb-0 text-danger" ><i class="fa fa-thermometer-full" aria-hidden="true"></i> <span text="${(ambient==null?'NaN':ambient.temp)}+' °C'"></span></div>
+                                  <div class="small text-muted">Temperature</div>
+                              </div>
+                          </div>
+                          <div class="col-sm-6 my-auto">
+                            <canvas id="humidityChart" width="100" height="50"></canvas>
+                            <div style="text-align: center;"> <div class="h4 mb-0 text-primary"><i class="fa fa-tint" aria-hidden="true"></i> <span text="${(ambient==null?'NaN':ambient.hum)}+'%'"></span></div>
+                                <div class="small text-muted">Humidity</div>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                 </div>
+              </div>
+              <div class="card-footer small text-muted">
+                Updated at <span text="${#dates.format(currentDate, 'dd-MM-yyyy HH:mm')}"></span>
+              </div>
+            </div>
+          </div>
+        </div>-->
+      </div>
+</html>

@@ -1,0 +1,42 @@
+ .tgme_action_form {
+    margin: 142px auto;
+     text-align: center;
+ }
+
+ .tgme_action_form div{
+    margin: 4px;
+ }
+
+  .tgme_action_form div label{
+     margin-right: 4px;
+  }
+
+.tgme_action_button {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 100%;
+    color: #FFF;
+    background: #5dc390;
+    border-radius: 3px;
+    overflow: hidden;
+    display: inline-block;
+    padding: 15px 27px 13px;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-sizing: border-box;
+    margin: 16px 0 0 0px;
+    border:0;
+ }
+
+ .tgme_action_input {
+     font-size: 13px;
+     font-weight: bold;
+     line-height: 100%;
+     border-radius: 3px;
+     overflow: hidden;
+     display: inline-block;
+     padding: 15px 27px 13px;
+     text-decoration: none;
+     box-sizing: border-box;
+     border:1px solid #DCDCDC;
+  }
