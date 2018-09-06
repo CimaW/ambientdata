@@ -23,6 +23,7 @@ webSocketServer.on('connection', function (ws) {
           ws.send('{"error":"I need a id"}');
           return;
         }
+        //{"id":"ESP_867A15","temp":24,"hum":66}
         if(obj.id=="ESP_867A15"){
           webSocketServer.esp=ws;
           if(obj.temp!=null){
@@ -52,7 +53,6 @@ webSocketServer.on('connection', function (ws) {
             webSocketServer.esp.send('{"update":"'+ws.id+'"}');
           }
         }
-      console.log('received: %s', message);
     }catch(error) {
       console.log(error);
       ws.send('{"error":"I speak only json"}');

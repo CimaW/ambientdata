@@ -22,7 +22,6 @@ const influx = new Influx.InfluxDB({
     router.post("/insert", (req, response) => {
         let temp = req.body.temp;
         let hum = req.body.hum;
-        console.log(`Write to ${temp} ${hum}`);
 
         influx.writePoints([{
             measurement: 'ambient',
@@ -42,16 +41,7 @@ const influx = new Influx.InfluxDB({
 
 
     router.get("/now", (req, response) => {
-      webSocketServer.ws.send('getInfo',function(){
-        let temp = webSocketServer.temp;
-        let hum = webSocketServer.hum;
-        console.log(`Write to ${temp} ${hum}`);
-        var resp={};
-        resp.temp=temp;
-        resp.hum=hum;
-        resp.timestamp=dateFormat(new Date(), "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'")
-        response.status( 200 ).json(resp);
-      });
+        response.status( 200 ).json(webSocketServer.response);
     });
 
 
