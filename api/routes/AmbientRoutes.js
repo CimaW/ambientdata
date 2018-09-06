@@ -41,6 +41,20 @@ const influx = new Influx.InfluxDB({
     });
 
 
+    router.get("/now", (req, response) => {
+      webSocketServer.ws.send('getInfo',function(){
+        let temp = webSocketServer.temp;
+        let hum = webSocketServer.hum;
+        console.log(`Write to ${temp} ${hum}`);
+        var resp={};
+        resp.temp=temp;
+        resp.hum=hum;
+        resp.timestamp=dateFormat(new Date(), "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'")
+        response.status( 200 ).json(resp);
+      });
+    });
+
+
     router.get("/select/:from/:to", (req, response) => {
         let from=req.params.from;
         let to=req.params.to;

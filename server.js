@@ -1,5 +1,8 @@
 express = require('express'),
 ambientRoutes = require('./api/routes/AmbientRoutes.js');
+webSocketServer = require('./api/AmbientDataWebSocket.js');
+
+ambientRoutes.webSocketServer=webSocketServer;
 
 app = express(),
 port = process.env.PORT || 8080;
