@@ -48,6 +48,7 @@
           $( document ).ready(function() {
                 cam42.init();
                 cam42.findAmbientData("now()-1d","now()");
+		cam42.plotBarChart([0,0]);
                 cam42.openWebSocket();
            });
       </script>

@@ -289,9 +289,12 @@ function Cam42(){
           this.webSocketServer.onmessage = function (messageEvent) {
               var wsMsg = messageEvent.data;
               let ambient=JSON.parse(wsMsg);
-              this.webSocketId=ambient.id;
+              control.webSocketId=ambient.id;
               if(ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum){
-                control.plotBarChart([ambient.data.temp,ambient.data.hum]);
+		control.tempChart.data.datasets[0].data[0]=  ambient.data.temp;
+		control.humChart.data.datasets[0].data[0]=  ambient.data.hum;
+		control.tempChart.update();
+		control.humChart.update(); 
                 control.currentAmbient.temp =ambient.data.temp;
                 control.currentAmbient.hum = ambient.data.hum;
               }
