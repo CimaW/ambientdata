@@ -293,6 +293,8 @@ function Cam42(){
               if(ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum){
 		control.tempChart.data.datasets[0].data[0]=  ambient.data.temp;
 		control.humChart.data.datasets[0].data[0]=  ambient.data.hum;
+		control.tempChart.data.datasets[0].data[1]=  60-ambient.data.temp;
+		control.humChart.data.datasets[0].data[1]=  100-ambient.data.hum;
 		control.tempChart.update();
 		control.humChart.update(); 
                 control.currentAmbient.temp =ambient.data.temp;
