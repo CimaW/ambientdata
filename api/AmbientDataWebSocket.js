@@ -63,7 +63,7 @@ webSocketServer.on('connection', function (ws) {
 });
 
 function sendData(ws){
-  ws.send('{"id:":"'+ws.id+'","data":'+JSON.stringify(webSocketServer.response)+'}');
+  ws.send('{"id":"'+ws.id+'","data":'+JSON.stringify(webSocketServer.response)+'}');
 
 }
 

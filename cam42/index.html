@@ -47,7 +47,8 @@
           var cam42=new Cam42();
           $( document ).ready(function() {
                 cam42.init();
-                   cam42.findAmbientData("now()-1d","now()");
+                cam42.findAmbientData("now()-1d","now()");
+                cam42.openWebSocket();
            });
       </script>
 
@@ -77,8 +78,8 @@
           </div>
         </div>
 
-        <!--<div class="row">
-          <div class="col-lg-6">
+        <div class="row">
+          <div class="col-lg-12">
             <div id="areachartcont"  class="card mb-3">
               <div class="card-header">
                 <i class="fa fa-bar-chart"></i>
@@ -86,7 +87,7 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-sm-12 my-auto">
+                  <div class="col-sm-8 my-auto">
                       <div class="row">
                           <div class="col-sm-6 my-auto">
                             <canvas id="temperatureChart" width="100" height="50"></canvas>
@@ -106,10 +107,10 @@
                  </div>
               </div>
               <div class="card-footer small text-muted">
-                Updated at <span text="${#dates.format(currentDate, 'dd-MM-yyyy HH:mm')}"></span>
+                Updated at <span id="realTimeId"></span>
               </div>
             </div>
           </div>
-        </div>-->
+        </div>
       </div>
 </html>

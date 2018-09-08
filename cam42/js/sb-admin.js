@@ -2,83 +2,6 @@ function Cam42(){
     this.lineChart=null;
     this.barChart=null;
     this.init=function(){
-        (function ($) {
-            "use strict"; // Start of use strict
-
-            // Configure tooltips for collapsed side navigation
-            $('.navbar-sidenav [data-toggle="tooltip"]').tooltip({
-                template: '<div class="tooltip navbar-sidenav-tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
-            })
-
-            // Toggle the side navigation
-            $("#sidenavToggler").click(function (e) {
-                e.preventDefault();
-                $("body").toggleClass("sidenav-toggled");
-                $(".navbar-sidenav .nav-link-collapse").addClass("collapsed");
-                $(".navbar-sidenav .sidenav-second-level, .navbar-sidenav .sidenav-third-level").removeClass("show");
-            });
-
-            // Force the toggled class to be removed when a collapsible nav link is clicked
-            $(".navbar-sidenav .nav-link-collapse").click(function (e) {
-                e.preventDefault();
-                $("body").removeClass("sidenav-toggled");
-            });
-
-            // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-            $('body.fixed-nav .navbar-sidenav, body.fixed-nav .sidenav-toggler, body.fixed-nav .navbar-collapse').on('mousewheel DOMMouseScroll', function (e) {
-                var e0 = e.originalEvent,
-                    delta = e0.wheelDelta || -e0.detail;
-                this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-                e.preventDefault();
-            });
-
-            // Scroll to top button appear
-            $(document).scroll(function () {
-                var scrollDistance = $(this).scrollTop();
-                if (scrollDistance > 100) {
-                    $('.scroll-to-top').fadeIn();
-                } else {
-                    $('.scroll-to-top').fadeOut();
-                }
-            });
-
-            // Configure tooltips globally
-            $('[data-toggle="tooltip"]').tooltip()
-
-            // Smooth scrolling using jQuery easing
-            $(document).on('click', 'a.scroll-to-top', function (event) {
-                var $anchor = $(this);
-                $('html, body').stop().animate({
-                    scrollTop: ($($anchor.attr('href')).offset().top)
-                }, 1000, 'easeInOutExpo');
-                event.preventDefault();
-            });
-
-            // Call the dataTables jQuery plugin
-            $(document).ready(function () {
-                $('#dataTable').DataTable();
-            });
-
-        })(jQuery); // End of use strict
-
-
-        if(typeof(Worker) !== "undefined") {
-                if(typeof(this.reloadAlarm) == "undefined") {
-                    this.reloadAlarm = new Worker("/js/workers.js");
-                }
-                this.reloadAlarm.onmessage = function(event) {
-                console.log(event.data);
-                    $("#lastAlarmImg").attr("src",event.data);
-                    $.get( "/dashboard/rest/lastDateAlarm", function( data ) {
-                            $("#lastDateSpan").html(moment(data).format("DD-MM-YYYY HH:mm")
-                                + " ("
-                                + moment(new Date()).format("DD-MM-YYYY HH:mm")
-                                + ")"
-                            );
-                        });
-                };
-            }
-
         // Chart.js scripts
         // -- Set new default font family and font color to mimic Bootstrap's default styling
         Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
@@ -349,21 +272,34 @@ function Cam42(){
                 });
     }
 
-    this.openStreammingCam=function(){
-        $("#maincontent").fadeOut();
-        $("#camsnapcontent").find(".card-img-top").attr("src",this.camSnapUrl)
-        $("#camsnapcontent").fadeIn();
-    }
-
-    this.alarmFullscreen=function(){
-        $("#maincontent").fadeOut();
-        $("#camsnapcontent").find(".card-img-top").attr("src","/photo/0/9/alarm.jpg")
-        $("#camsnapcontent").fadeIn();
-    }
-
-    this.closeStreammingCam=function(){
-        $("#camsnapcontent").fadeOut();
-        $("#camsnapcontent").find(".card-img-top").attr("src","/images/imagenotfound.png")
-        $("#maincontent").fadeIn();
+    this.webSocketServer=null;
+    this.webSocketId=null;
+    this.webSocketURL="ws://ambientdata-rest-ws-ambientdata.193b.starter-ca-central-1.openshiftapps.com/";
+    this.currentAmbient={temp:-1,hum:-1};
+    this.openWebSocket=function(){
+      try {
+          var control=this;
+          this.webSocketServer = new WebSocket(this.webSocketURL);
+          this.webSocketServer.onclose = function (closeEvent) {
+            control.webSocketServer = new WebSocket(this.webSocketURL);
+          }
+          this.webSocketServer.onerror = function (errorEvent) {
+              console.log("WebSocket ERROR: " + JSON.stringify(errorEvent, null, 4));
+          }
+          this.webSocketServer.onmessage = function (messageEvent) {
+              var wsMsg = messageEvent.data;
+              let ambient=JSON.parse(wsMsg);
+              this.webSocketId=ambient.id;
+              if(ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum){
+                control.plotBarChart([ambient.data.temp,ambient.data.hum]);
+                control.currentAmbient.temp =ambient.data.temp;
+                control.currentAmbient.hum = ambient.data.hum;
+              }
+	      let lastUpdate= moment(ambient.data.timestamp).format("YYYY-MM-DD HH:mm:ss"); ;
+              $("#realTimeId").html(lastUpdate);
+          }
+      } catch (exception) {
+          console.error(exception);
+      }
     }
 }
