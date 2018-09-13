@@ -144,10 +144,10 @@ function Cam42(){
 
 
     this.plotAreaChart=function(labels,temperatures,humidity){
-        lineChart.data.labels=labels;
-        lineChart.data.datasets[0].data=temperatures;
-        lineChart.data.datasets[1].data=humidity;
-        lineChart.update();
+        this.lineChart.data.labels=labels;
+        this.lineChart.data.datasets[0].data=temperatures;
+        this.lineChart.data.datasets[1].data=humidity;
+        this.lineChart.update();
     }
 
 
