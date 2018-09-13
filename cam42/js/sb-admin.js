@@ -8,7 +8,7 @@ function Cam42(){
         Chart.defaults.global.defaultFontColor = '#292b2c';
 
         var ctx = document.getElementById("myAreaChart");
-            lineChart = new Chart(ctx, {
+            this.lineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     datasets: [{
@@ -270,6 +270,72 @@ function Cam42(){
                         }
                     }
                 });
+
+            var hoursChart = $("#hoursChart");
+            this.hoursChart = new Chart(hoursChart, {
+                      type: 'line',
+                      data: {
+                          datasets: [{
+                              lineTension: 0.3,
+                              borderColor: ['#dc3545'],
+                              backgroundColor:"rgba(0, 0, 0, 0)",
+                              pointRadius: 3,
+                              pointBackgroundColor: "#dc3545",
+                              pointBorderColor: "#dc3545",
+                              pointHoverRadius: 4,
+                              pointHoverBackgroundColor: "#dc3545",
+                              pointHitRadius: 20,
+                              pointBorderWidth: 1,
+                              label: 'Temperature',
+                              yAxisID:"temperature",
+                          },
+                          {
+                              lineTension: 0.3,
+                              borderColor: ['#007bff'],
+                              backgroundColor:"rgba(0, 0, 0, 0)",
+                              pointRadius: 3,
+                              pointBackgroundColor: "#007bff",
+                              pointBorderColor: "#007bff",
+                              pointHoverRadius: 4,
+                              pointHoverBackgroundColor: "#007bff",
+                              pointHitRadius: 20,
+                              pointBorderWidth: 1,
+                              label: 'Humidity',
+                              yAxisID:"humidity",
+                          }]
+                      },
+                      options: {
+                          scales: {
+                              yAxes: [{
+                                  id: 'temperature',
+                                  type: 'linear',
+                                  min: 0,
+                                  ticks: {
+                                      suggestedMax: 50,
+                                      suggestedMin: 0,
+                                      callback: function(value, index, values) {
+                                          return value+" °C";
+                                      }
+                                  }
+                              }, {
+                                  id: 'humidity',
+                                  type: 'linear',
+                                  min: 0,
+                                  max:100,
+                                  ticks: {
+                                      suggestedMax: 100,
+                                      suggestedMin: 0,
+                                      callback: function(value, index, values) {
+                                          return value+"%";
+                                      }
+                                  }
+                              }]
+                          },
+                          legend: {
+                              display: false
+                          }
+                      }
+                  });
     }
 
     this.webSocketServer=null;
@@ -281,7 +347,7 @@ function Cam42(){
           var control=this;
           this.webSocketServer = new WebSocket(this.webSocketURL);
           this.webSocketServer.onclose = function (closeEvent) {
-            control.webSocketServer = new WebSocket(this.webSocketURL);
+            control.webSocketServer = new WebSocket(control.webSocketURL);
           }
           this.webSocketServer.onerror = function (errorEvent) {
               console.log("WebSocket ERROR: " + JSON.stringify(errorEvent, null, 4));
@@ -291,16 +357,33 @@ function Cam42(){
               let ambient=JSON.parse(wsMsg);
               control.webSocketId=ambient.id;
               if(ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum){
-		control.tempChart.data.datasets[0].data[0]=  ambient.data.temp;
-		control.humChart.data.datasets[0].data[0]=  ambient.data.hum;
-		control.tempChart.data.datasets[0].data[1]=  60-ambient.data.temp;
-		control.humChart.data.datasets[0].data[1]=  100-ambient.data.hum;
-		control.tempChart.update();
-		control.humChart.update(); 
-                control.currentAmbient.temp =ambient.data.temp;
+		            control.tempChart.data.datasets[0].data[0]=  ambient.data.temp;
+            		control.humChart.data.datasets[0].data[0]=  ambient.data.hum;
+            		control.tempChart.data.datasets[0].data[1]=  60-ambient.data.temp;
+            		control.humChart.data.datasets[0].data[1]=  100-ambient.data.hum;
+            		control.tempChart.update();
+            		control.humChart.update();
+                control.currentAmbient.temp = ambient.data.temp;
                 control.currentAmbient.hum = ambient.data.hum;
+                $("#ambientHum").html(ambient.data.hum+"%");
+                $("#ambientTemp").html(ambient.data.temp+"°C");
               }
-	      let lastUpdate= moment(ambient.data.timestamp).format("YYYY-MM-DD HH:mm:ss"); ;
+
+              if(ambient.data.temp<100){
+                let time=moment(ambient.data.timestamp).format("HH:mm");
+                control.hoursChart.data.labels.push(time);
+                control.hoursChart.data.datasets[0].data.push(ambient.data.temp);
+                control.hoursChart.data.datasets[1].data.push(ambient.data.hum);
+                if(control.hoursChart.data.labels.length>60){
+                  control.hoursChart.data.labels = control.hoursChart.data.labels.slice(1);
+                  control.hoursChart.data.datasets[0].data=control.hoursChart.data.datasets[0].data.slice(1);
+                  control.hoursChart.data.datasets[1].data=control.hoursChart.data.datasets[1].data.slice(1);
+                }
+                control.hoursChart.update();
+              }
+
+
+	            let lastUpdate= moment(ambient.data.timestamp).format("YYYY-MM-DD HH:mm:ss");
               $("#realTimeId").html(lastUpdate);
           }
       } catch (exception) {

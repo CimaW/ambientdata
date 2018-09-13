@@ -88,20 +88,23 @@
               </div>
               <div class="card-body">
                 <div class="row">
-                  <div class="col-sm-8 my-auto">
+                  <div class="col-sm-12 my-auto">
                       <div class="row">
-                          <div class="col-sm-6 my-auto">
+                          <div class="col-sm-3 my-auto">
                             <canvas id="temperatureChart" width="100" height="50"></canvas>
                               <div style="text-align: center;">
-                                  <div class="h4 mb-0 text-danger" ><i class="fa fa-thermometer-full" aria-hidden="true"></i> <span text="${(ambient==null?'NaN':ambient.temp)}+' °C'"></span></div>
+                                  <div class="h4 mb-0 text-danger" ><i class="fa fa-thermometer-full" aria-hidden="true"></i> <span id="ambientTemp"></span></div>
                                   <div class="small text-muted">Temperature</div>
                               </div>
                           </div>
-                          <div class="col-sm-6 my-auto">
+                          <div class="col-sm-3 my-auto">
                             <canvas id="humidityChart" width="100" height="50"></canvas>
-                            <div style="text-align: center;"> <div class="h4 mb-0 text-primary"><i class="fa fa-tint" aria-hidden="true"></i> <span text="${(ambient==null?'NaN':ambient.hum)}+'%'"></span></div>
+                            <div style="text-align: center;"> <div class="h4 mb-0 text-primary"><i class="fa fa-tint" aria-hidden="true"></i> <span id="ambientHum"></span></div>
                                 <div class="small text-muted">Humidity</div>
                             </div>
+                          </div>
+                          <div class="col-sm-6 my-auto">
+                            <canvas id="hoursChart" width="100" height="50"></canvas>
                           </div>
                       </div>
                   </div>
