@@ -18,4 +18,4 @@ express()
     .get('*', (req, res) => res.redirect('/404.html'))
     .listen(port, () => console.log(`Listening on ${ port }`))
 
-console.log('todo list RESTful API server started on: ' + port);
+console.log('todo list RESTFUL API server started on: ' + port);
