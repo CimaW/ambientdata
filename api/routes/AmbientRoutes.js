@@ -54,7 +54,7 @@ ssl: true
         if(to.indexOf("now")<0){
           to="'"+to+"'";
         }
-        let str="select temp/measure_count as temp,hum/measure_count as hum from ambient_data";
+        let str="select temp/measure_count as temperature,hum/measure_count as humidity from ambient_data";
 	pool.query(str, (err, res) => {
 		console.log(res);
 		if(res!=null && res.rowCount>0){
