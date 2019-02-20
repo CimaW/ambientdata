@@ -47,7 +47,11 @@
           var cam42=new Cam42();
           $( document ).ready(function() {
                 cam42.init();
-                cam42.findAmbientData("now()-1d","now()");
+		startDate= moment().subtract(1, 'days');
+                endDate= moment();
+		let from=startDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+              	let to=endDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+                cam42.findAmbientData(from,to);
 		cam42.plotBarChart([0,0]);
                 cam42.openWebSocket();
            });

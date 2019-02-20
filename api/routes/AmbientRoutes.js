@@ -48,14 +48,15 @@ ssl: true
     router.get("/select/:from/:to", (req, response) => {
         let from=req.params.from;
         let to=req.params.to;
-        if(from.indexOf("now")<0){
-          from="'"+from+"'";
-        }
-        if(to.indexOf("now")<0){
-          to="'"+to+"'";
-        }
-        let str="select measure_date as time, temp/measure_count as temperature,hum/measure_count as humidity from ambient_data order by measure_date asc";
-	pool.query(str, (err, res) => {
+        let str="select measure_date as time, temp/measure_count as temperature,hum/measure_count as humidity"+
+		" from ambient_data"+
+		" where measure_date >=timezone('GMT',date_trunc('hour',to_timestamp($1,'YYYY-MM-DD\"T\"HH24:MI:SS.MS')))"+
+		" and measure_date <=timezone('GMT',date_trunc('hour',to_timestamp($2,'YYYY-MM-DD\"T\"HH24:MI:SS.MS')))";
+	const values = [from, to];	
+	pool.query(str, values,(err, res) => {
+		if (err) {
+			    console.log(err.stack)
+			  }
 		if(res!=null && res.rowCount>0){
 			response.json(res.rows);
 		}else{
