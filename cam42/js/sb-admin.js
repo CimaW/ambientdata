@@ -356,11 +356,11 @@ function Cam42(){
               var wsMsg = messageEvent.data;
               let ambient=JSON.parse(wsMsg);
               control.webSocketId=ambient.id;
-              if(ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum){
-		            control.tempChart.data.datasets[0].data[0]=  ambient.data.temp;
-            		control.humChart.data.datasets[0].data[0]=  ambient.data.hum;
-            		control.tempChart.data.datasets[0].data[1]=  60-ambient.data.temp;
-            		control.humChart.data.datasets[0].data[1]=  100-ambient.data.hum;
+              if(ambient.data.temp < 100 && (ambient.data.temp != control.currentAmbient.temp || ambient.data.hum != control.currentAmbient.hum)){
+	              control.tempChart.data.datasets[0].data[0] = ambient.data.temp;
+            		control.humChart.data.datasets[0].data[0] = ambient.data.hum;
+            		control.tempChart.data.datasets[0].data[1] = 60-ambient.data.temp;
+            		control.humChart.data.datasets[0].data[1] = 100-ambient.data.hum;
             		control.tempChart.update();
             		control.humChart.update();
                 control.currentAmbient.temp = ambient.data.temp;
@@ -370,7 +370,7 @@ function Cam42(){
               }
 
               if(ambient.data.temp<100){
-                let time=moment(ambient.data.timestamp).format("HH:mm");
+                let time=moment(ambient.data.timestamp).format("HH:mm:ss");
                 control.hoursChart.data.labels.push(time);
                 control.hoursChart.data.datasets[0].data.push(ambient.data.temp);
                 control.hoursChart.data.datasets[1].data.push(ambient.data.hum);
@@ -382,7 +382,6 @@ function Cam42(){
                 control.hoursChart.update();
               }
 
-
 	            let lastUpdate= moment(ambient.data.timestamp).format("YYYY-MM-DD HH:mm:ss");
               $("#realTimeId").html(lastUpdate);
           }
@@ -390,4 +389,9 @@ function Cam42(){
           console.error(exception);
       }
     }
+
+    this.updateRealTimeChart=function(){
+      this.webSocketServer.send('{"id":"'+this.webSocketId+'"}') ;
+    }
+  
 }

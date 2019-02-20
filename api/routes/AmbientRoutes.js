@@ -1,36 +1,36 @@
 var express = require('express');
 var router = express.Router();
 var dateFormat = require('dateformat');
-const Influx = require('influx')
-const influx = new Influx.InfluxDB({
-  host: 'influxdb-svc.ambientdata.svc',
-  database: 'cam42DB',
-  schema: [
-    {
-      measurement: 'ambient',
-      fields: {
-        temp: Influx.FieldType.INTEGER,
-        hum: Influx.FieldType.INTEGER
-      },
-      tags: [
-        'host'
-      ]
-    }
-  ]
+const { Pool, Client } = require('pg')
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+ssl: true
 })
 
     router.post("/insert", (req, response) => {
         let temp = req.body.temp;
         let hum = req.body.hum;
-
-        influx.writePoints([{
-            measurement: 'ambient',
-            fields: { temp:temp, hum:hum }
-            }
-        ]).catch(err => {
-          console.error(`Error saving data to InfluxDB! ${err.stack}`)
-        })
-
+	
+	const update_query='update ambient_data set "temp"="temp"+$1, hum=hum+$2,measure_count=measure_count+1 where measure_date =date_trunc(\'hour\', now())';
+	const now_query='select temp,hum,measure_count from ambient_data where measure_date =date_trunc(\'hour\', now())';
+        const insert_query = 'INSERT INTO ambient_data("temp", hum, measure_count) VALUES($1, $2, $3) RETURNING *';
+	pool.query(now_query, (err, res) => {
+		if(res!=null && res.rowCount==0){
+			const values = [temp, hum,1];
+			pool.query(insert_query, values, (err, res) => {
+			  if (err) {
+			    console.log(err.stack)
+			  }
+			});
+		}else{
+			const values = [temp, hum];
+			pool.query(update_query, values, (err, res) => {
+			  if (err) {
+			    console.log(err.stack)
+			  }
+			});
+		}
+	});
 
         var resp={};
         resp.result="OK";
@@ -54,16 +54,14 @@ const influx = new Influx.InfluxDB({
         if(to.indexOf("now")<0){
           to="'"+to+"'";
         }
-        let str="SELECT MEAN(temp) as temperature,MEAN(hum) as humidity " +
-                            "FROM ambient " +
-                            "WHERE time > "+from+" and time <= "+ to + " "+
-                            "GROUP BY time(60m)";
-
-    influx.query(str).then(result => {
-        response.json(result)
-      }).catch(err => {
-        response.status(500).send(err.stack)
-      })
+        let str="select temp/measure_count,hum/measure_count from ambient_data";
+	pool.query(now_query, (err, res) => {
+		if(res!=null && res.rowCount>0){
+			response.json(res.rows);
+		}else{
+			response.json("{}")
+		}
+	});
     });
 
 
