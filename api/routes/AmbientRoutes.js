@@ -51,7 +51,7 @@ ssl: true
         let str="select measure_date as time, temp/measure_count as temperature,hum/measure_count as humidity"+
 		" from ambient_data"+
 		" where measure_date >=timezone('GMT',date_trunc('hour',to_timestamp($1,'YYYY-MM-DD\"T\"HH24:MI:SS.MS')))"+
-		" and measure_date <=timezone('GMT',date_trunc('hour',to_timestamp($2,'YYYY-MM-DD\"T\"HH24:MI:SS.MS')))";
+		" and measure_date <=timezone('GMT',date_trunc('hour',to_timestamp($2,'YYYY-MM-DD\"T\"HH24:MI:SS.MS'))) ORDER BY measure_date ASC";
 	const values = [from, to];	
 	pool.query(str, values,(err, res) => {
 		if (err) {
