@@ -340,7 +340,7 @@ function Cam42(){
 
     this.webSocketServer=null;
     this.webSocketId=null;
-    this.webSocketURL="ws://ambientdata-rest-ws-ambientdata.193b.starter-ca-central-1.openshiftapps.com/";
+    this.webSocketURL="ws://ambientdata.herokuapp.com/";
     this.currentAmbient={temp:-1,hum:-1};
     this.openWebSocket=function(){
       try {

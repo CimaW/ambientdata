@@ -1,7 +1,7 @@
 var WebSocketServer = require('ws').Server;
 var dateFormat = require('dateformat');
 var wsPort = process.env.WSPORT || 8888;
-webSocketServer = new WebSocketServer({port: wsPort});
+webSocketServer = new WebSocketServer({server});
 const uuidv4 = require('uuid/v4');
 
 console.log('web socket Listening on: %s', wsPort);
