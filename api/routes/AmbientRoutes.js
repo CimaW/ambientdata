@@ -10,7 +10,7 @@ ssl: true
     router.post("/insert", (req, response) => {
         let temp = req.body.temp;
         let hum = req.body.hum;
-	
+
 	const update_query='update ambient_data set "temp"="temp"+$1, hum=hum+$2,measure_count=measure_count+1 where measure_date =date_trunc(\'hour\', now())';
 	const now_query='select temp,hum,measure_count from ambient_data where measure_date =date_trunc(\'hour\', now())';
         const insert_query = 'INSERT INTO ambient_data("temp", hum, measure_count) VALUES($1, $2, $3) RETURNING *';
@@ -45,6 +45,47 @@ ssl: true
     });
 
 
+    router.get("/alexa", (req, response) => {
+        response.status( 200 ).send(
+            ''{
+            +'  "version": "string",'
+            +'  "sessionAttributes": {'
+            +'    "key": "value"'
+            +'  },'
+            +'  "response": {'
+            +'    "outputSpeech": {'
+            +'      "type": "PlainText",'
+            +'      "text": "La temperatura è di '+webSocketServer.response.temp+'gradi mentre la percentuale di umidità è di '+webSocketServer.response.hum+' percento",'
+            +'      "playBehavior": "REPLACE_ENQUEUED"      '
+            +'    },'
+            +'    "card": {'
+            +'      "type": "Standard",'
+            +'      "title": "Title of the card",'
+            +'      "text": "Temperatura: '+webSocketServer.response.temp+'°C Unidità: '+webSocketServer.response.hum+'%",'
+            +'      "image": {'
+          //  +'        "smallImageUrl": "https://url-to-small-card-image...",'
+          //  +'        "largeImageUrl": "https://url-to-large-card-image..."'
+            +'      }'
+            +'    },'
+            +'    "reprompt": {'
+            +'      "outputSpeech": {'
+            +'        "type": "PlainText",'
+            +'        "text": "Qual\'è la temperatura in camera?",'
+            +'        "playBehavior": "REPLACE_ENQUEUED"             '
+            +'      }'
+            +'    },'
+            +'    "directives": ['
+            +'      {'
+            +'        "type": "InterfaceName.Directive"'
+            +'      }'
+            +'    ],'
+            +'    "shouldEndSession": true'
+            +'  }'
+            +'}'
+
+        );
+    });
+
     router.get("/select/:from/:to", (req, response) => {
         let from=req.params.from;
         let to=req.params.to;
@@ -52,7 +93,7 @@ ssl: true
 		" from ambient_data"+
 		" where measure_date >=timezone('GMT',date_trunc('hour',to_timestamp($1,'YYYY-MM-DD\"T\"HH24:MI:SS.MS')))"+
 		" and measure_date <=timezone('GMT',date_trunc('hour',to_timestamp($2,'YYYY-MM-DD\"T\"HH24:MI:SS.MS'))) ORDER BY measure_date ASC";
-	const values = [from, to];	
+	const values = [from, to];
 	pool.query(str, values,(err, res) => {
 		if (err) {
 			    console.log(err.stack)
