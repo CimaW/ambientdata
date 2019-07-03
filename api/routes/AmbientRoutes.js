@@ -53,7 +53,7 @@ ssl: true
               +'"uid": "urn:uuid:'+uuidv4()+'",'
               +'"updateDate": "'+dateFormat(new Date(), "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'")+'",'
               +'"titleText": "Temperatura e Unidità in camera",'
-              +'"mainText": "La temperatura è di '+webSocketServer.response.temp+'gradi mentre la percentuale di umidità è di '+webSocketServer.response.hum+' percento",'
+              +'"mainText": "La temperatura è di '+webSocketServer.response.temp+' gradi mentre la percentuale di umidità è di '+webSocketServer.response.hum+' percento",'
               +'"redirectionUrl": "https://developer.amazon.com/public/community/blog"'
             +'}'
         );
