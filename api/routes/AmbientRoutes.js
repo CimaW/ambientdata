@@ -47,7 +47,7 @@ ssl: true
 
     router.get("/alexa", (req, response) => {
         response.status( 200 ).send(
-            ''{
+             '{'
             +'  "version": "string",'
             +'  "sessionAttributes": {'
             +'    "key": "value"'
