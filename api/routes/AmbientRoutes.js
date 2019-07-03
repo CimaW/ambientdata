@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dateFormat = require('dateformat');
+const uuidv4 = require('uuid/v4');
 const { Pool, Client } = require('pg')
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -46,43 +47,15 @@ ssl: true
 
 
     router.get("/alexa", (req, response) => {
+        response.header("Content-Type", "application/json");
         response.status( 200 ).send(
              '{'
-            +'  "version": "string",'
-            +'  "sessionAttributes": {'
-            +'    "key": "value"'
-            +'  },'
-            +'  "response": {'
-            +'    "outputSpeech": {'
-            +'      "type": "PlainText",'
-            +'      "text": "La temperatura è di '+webSocketServer.response.temp+'gradi mentre la percentuale di umidità è di '+webSocketServer.response.hum+' percento",'
-            +'      "playBehavior": "REPLACE_ENQUEUED"      '
-            +'    },'
-            +'    "card": {'
-            +'      "type": "Standard",'
-            +'      "title": "Title of the card",'
-            +'      "text": "Temperatura: '+webSocketServer.response.temp+'°C Unidità: '+webSocketServer.response.hum+'%",'
-            +'      "image": {'
-          //  +'        "smallImageUrl": "https://url-to-small-card-image...",'
-          //  +'        "largeImageUrl": "https://url-to-large-card-image..."'
-            +'      }'
-            +'    },'
-            +'    "reprompt": {'
-            +'      "outputSpeech": {'
-            +'        "type": "PlainText",'
-            +'        "text": "Qual\'è la temperatura in camera?",'
-            +'        "playBehavior": "REPLACE_ENQUEUED"             '
-            +'      }'
-            +'    },'
-            +'    "directives": ['
-            +'      {'
-            +'        "type": "InterfaceName.Directive"'
-            +'      }'
-            +'    ],'
-            +'    "shouldEndSession": true'
-            +'  }'
+              +'"uid": "urn:uuid:'+uuidv4()+'",''
+              +'"updateDate": "'+dateFormat(new Date(), "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'")+'",''
+              +'"titleText": "Temperatura e Unidità in camera",''
+              +'"mainText": "La temperatura è di '+webSocketServer.response.temp+'gradi mentre la percentuale di umidità è di '+webSocketServer.response.hum+' percento",''
+              +'"redirectionUrl": "https://developer.amazon.com/public/community/blog"''
             +'}'
-
         );
     });
 
